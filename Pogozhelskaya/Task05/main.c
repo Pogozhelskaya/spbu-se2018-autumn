@@ -133,6 +133,7 @@ int main(int argc, char* argv[]) {
         char** strings = (char**)malloc(N * sizeof(char*));
         if (strings == NULL) {
             fprintf(stderr, "%s\n", "Allocation error");
+            fflush(stdout);
             exit(4);
         }
         if (f != NULL) {
@@ -140,6 +141,7 @@ int main(int argc, char* argv[]) {
 		        strings[i] = (char*)malloc(1 * sizeof(char));
                 if (strings[i] == NULL) {
                     fprintf(stderr, "%s\n", "Allocation error");
+                    fflush(stdout);
                     exit(4);
                 }
 		        int j = 0;
@@ -147,6 +149,7 @@ int main(int argc, char* argv[]) {
 			      strings[i] = (char*)realloc(strings[i], (j + 1) * sizeof(char));
                     if (strings[i] == NULL) {
                         fprintf(stderr, "%s\n", "Allocation error");
+                        fflush(stdout);
                         exit(4);
                     }
                 }
@@ -155,30 +158,29 @@ int main(int argc, char* argv[]) {
 	        }
         } else {
             printf("%s\n", "Unable to open the file"); 
+            fflush(stdout);
             exit(2);
         }
-        switch(sort_name[0]) {
-            case 'b':
-                bubble_sort(strings, N);
-                break;
-            case 'i':
-                insertion_sort(strings, N);
-                break;
-            case 'm':
-                merge_sort(strings, 0, N);
-                break;
-            case 'q':
-                quick_sort(strings, 0, N - 1);
-                break;
-            case 'h':
-                heap_sort(strings, N);
-                break;
-            default:
-                printf("%s\n", "invalid sort name");
-                exit(1);
+        if (strcmp(sort_name, "bubble") == 0)
+            bubble_sort(strings, N);
+        else if (strcmp(sort_name, "insertion") == 0)
+            insertion_sort(strings, N);
+        else if (strcmp(sort_name, "merge") == 0)
+            merge_sort(strings, 0, N);
+        else if (strcmp(sort_name, "quick") == 0)
+            quick_sort(strings, N - 1);
+        else if (strcmp(sort_name, "heap") == 0)
+            heap_sort(strings, N);
+        else if (strcmp(sort_name, "radix") == 0)
+            heap_sort(strings, N);
+        else {
+            printf("%s\n", "invalid sort name");
+            fflush(stdout);
+            exit(1);
         }
         for(int i = 0; i < N; i++)
             printf("%s", strings[i]);
+        fflush(stdout);
         fclose(f);
         for(int i = 0; i < N; i++)
             free(strings[i]);
@@ -189,3 +191,4 @@ int main(int argc, char* argv[]) {
     }
     return 0;
 }
+
